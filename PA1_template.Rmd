@@ -4,22 +4,54 @@ output:
   html_document:
     keep_md: true
 ---
-
+```{r}
+options(scipen = 1)
+```
 
 ## Loading and preprocessing the data
 
-
+```{r loaddata}
+data<-read.csv("activity.csv", stringsAsFactors=FALSE)
+```
 
 ## What is mean total number of steps taken per day?
 
+```{r meantotal}
+databyday<-aggregate(steps ~ date, data=data, FUN="sum")
+with (databyday,
+      hist(steps)
+)
+mean<-mean(databyday$steps)
+median<-median(databyday$steps)
+#Then use `r round(mean,2)` and `r median`
+```
 
+Mean: `r round(mean,2)`
+
+Median: `r median`
 
 ## What is the average daily activity pattern?
 
+```{r acrossdays}
+databyinterval<-aggregate(steps ~ interval, data=data, FUN="mean")
+with (databyinterval,
+      plot(interval, steps, type='l')
+)
+busiestinterval<-databyinterval[which.max(databyinterval$steps),]
+#Then use `r busiestinterval[1]` and `r round(busiestinterval[2],2)`
+```
 
+The interval with the most steps on average is `r busiestinterval[1]` with `r round(busiestinterval[2],2)` steps.
 
 ## Imputing missing values
 
+```{r missingvals}
+numbermissing<-sum(is.na(data$steps))
+#Then use `r numbermissing`
 
+datanasreplaced<-data[is.na(data)]<-
+```
+
+There are `r numbermissing` rows with 'NA' steps
 
 ## Are there differences in activity patterns between weekdays and weekends?
