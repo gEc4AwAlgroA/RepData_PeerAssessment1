@@ -77,6 +77,8 @@ median2<-median(databyday2$steps)
 
 There are 2304 rows with 'NA' steps
 
+I'm replacing the missing values with the mean number of steps for that interval calculated across the days where there is data.
+
 Mean: 10766.19
 
 Median: 10766.19
@@ -85,4 +87,17 @@ They stay the same - I believe this is because the data is missing in complete d
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-Sorry, ran out of time.
+
+```r
+datanasreplaced$isweekend[weekdays(as.POSIXct(datanasreplaced$date)) %in% c("Monday","Tuesday","Wednesday","Thursday","Friday")]<-"weekday"
+datanasreplaced$isweekend[!weekdays(as.POSIXct(datanasreplaced$date)) %in% c("Monday","Tuesday","Wednesday","Thursday","Friday")]<-"weekend"
+datanasreplaced$isweekend<-factor(datanasreplaced$isweekend)
+
+databyinterval2<-aggregate(steps ~ interval + isweekend, data=datanasreplaced, FUN="mean")
+library(lattice)
+with (databyinterval2,
+      xyplot(steps ~ interval|isweekend, type='l', layout=c(1,2))
+)
+```
+
+![](PA1_template_files/figure-html/dayofweek-1.png) 
