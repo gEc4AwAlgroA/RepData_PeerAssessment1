@@ -48,10 +48,26 @@ The interval with the most steps on average is `r busiestinterval[1]` with `r ro
 ```{r missingvals}
 numbermissing<-sum(is.na(data$steps))
 #Then use `r numbermissing`
+datanasreplaced<-data
+datanasreplaced[is.na(data),1]=databyinterval[match(datanasreplaced[is.na(datanasreplaced$steps),3],databyinterval[,1]),2]
 
-datanasreplaced<-data[is.na(data)]<-
+databyday2<-aggregate(steps ~ date, data=datanasreplaced, FUN="sum")
+with (databyday2,
+      hist(steps)
+)
+mean2<-mean(databyday2$steps)
+median2<-median(databyday2$steps)
+#Then use `r round(mean2,2)` and `r round(median2,2)`
 ```
 
 There are `r numbermissing` rows with 'NA' steps
 
+Mean: `r round(mean2,2)`
+
+Median: `r round(median2,2)`
+
+They stay the same - I believe this is because the data is missing in complete days and I have filled in over intervals.
+
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Sorry, ran out of time.
